@@ -32,7 +32,7 @@ const userSchema = new Schema(
 );
 
 //virtual property for friendcount
-userSchema.virtual("friendcount").get(function () {
+userSchema.virtual("friendCount").get(function () {
   return `${this.friends.length}`;
 });
 // initializes the User model
