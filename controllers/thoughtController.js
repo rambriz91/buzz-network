@@ -38,7 +38,15 @@ module.exports = {
           .status(404)
           .json({ message: "could not find thought with that id!" });
       }
-      res.json(thought);
+      const user = await User.findOneAndUpdate(
+        { thoughts: params.id },
+        { $pull: { thoughts: params.id } },
+        { new: true }
+      );
+      if (!user) {
+        return res.status(404).json({'Thought deleted, but no associated user found!'})
+      }
+      res.json({ message: "Thought successfully deleted" });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -52,11 +60,13 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  //update thought
   async updateThought(req, res) {
     try {
       const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
-        { $set: req.body }
+        { $set: req.body },
+        { runValidators: true, new: true }
       );
       if (!thought) {
         return res
