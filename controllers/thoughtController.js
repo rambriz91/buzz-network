@@ -126,7 +126,7 @@ module.exports = {
         { new: true }
       );
       if (!thought) {
-        res.status(404).res.json({ message: "Invalid thought Id" });
+        res.status(404).json({ message: "Invalid thought Id" });
       }
       res.json({ message: "Reaction removed!" });
     } catch (err) {

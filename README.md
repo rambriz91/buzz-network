@@ -16,8 +16,8 @@ The app can be started by by running node command "npm start" in a terminal. Onc
 
 ## Links
 
-GitHub Repo Page: https://github.com/rambriz91/sesame-commerce
-Demo Link: https://drive.google.com/file/d/1Kd5QC2GXPkzp1ItqbVU4x94yDOPFcWwE/view
+GitHub Repo Page: https://github.com/rambriz91/buzz-network
+Demo Link:
 
 ## Credits
 
