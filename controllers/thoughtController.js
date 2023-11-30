@@ -106,5 +106,21 @@ module.exports = {
     } catch (err) {
       res.status(500).json(err);
     }
+  },
+  //delete a reaction
+  async deleteReaction(req, res) {
+    try {
+      const thought = await Thought.findOneAndUpdate(
+        {_id: req.params.thoughtId},
+        {$pull: { reactions: { reactionId: req.params.reactionId}}},
+        {new: true}
+        );
+        if(!thought) {
+          res.status(404).res.json({ message: 'Invalid thought Id'})
+        }
+        res.json({message: 'Reaction removed!'})
+    } catch (err) {
+      res.status(500).json(err);
+    }
   }
 };
