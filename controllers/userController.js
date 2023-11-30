@@ -80,9 +80,9 @@ module.exports = {
   //add a friend
   async addFriend(req, res) {
     try {
-      const user = User.findOneAndUpdate(
-        { _id: params.userId },
-        { $addToSet: { friends: params.friendId } },
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $addToSet: { friends: req.params.friendId } },
         { runValidators: true, new: true }
       );
       if (!user) {
@@ -90,15 +90,16 @@ module.exports = {
       }
       res.json(user);
     } catch (err) {
+      console.error(err);
       res.status(500).json(err);
     }
   },
   //delete a friend
   async deleteFriend(req, res) {
     try {
-      const user = User.findOneAndUpdate(
-        { _id: params.userId },
-        { $pull: { friends: params.friendId } },
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $pull: { friends: req.params.friendId } },
         { new: true }
       );
       if (!user) {

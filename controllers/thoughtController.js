@@ -39,8 +39,8 @@ module.exports = {
           .json({ message: "could not find thought with that id!" });
       }
       const user = await User.findOneAndUpdate(
-        { thoughts: params.id },
-        { $pull: { thoughts: params.id } },
+        { thoughts: req.params.id },
+        { $pull: { thoughts: req.params.id } },
         { new: true }
       );
       if (!user) {
@@ -54,8 +54,17 @@ module.exports = {
   //create thought
   async createThought(req, res) {
     try {
-      const thought = await Thought.create(req.body);
-      res.json(thought);
+      const user = await User.findOne({_id: req.params.userId});
+      if (!user) {
+        return res.status(404).json({ message: 'User not found!'})
+      }
+      const thought = await Thought.create({...req.body, username: user.username});
+      await User.findOneAndUpdate(
+        {_id: user._id},
+        {$push: { thoughts: thought._id}},
+        {new: true}
+      )
+      res.json({message: 'Thought created!'})
     } catch (err) {
       res.status(500).json(err);
     }
@@ -78,4 +87,24 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  //add a reaction
+  async addReaction(req, res) {
+    try {
+      const user = await User.findOne({_id: req.params.userId});
+      if(!user) {
+        return res.status(404).json({ message: 'User not found!'})
+      }
+      const thought = await Thought.findOneAndUpdate(
+        {_id: req.params.thoughtId},
+        {$addToSet: {reactions: {...req.body, username: user.username}}},
+        {runValidators: true, new: true}
+        );
+        if(!thought) {
+          return res.status(404).json( {message: 'No thought with that id found!'})
+        }
+        res.json({ message: 'Reaction added to thought!'})
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  }
 };
